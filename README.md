@@ -7,6 +7,20 @@ Progetto di test per scheda **ESP32 DevKit V1 (ESP32-WROOM-32)**.
 | Percorso | Descrizione |
 |---|---|
 | `blink_test/blink_test.ino` | Sketch di verifica: fa lampeggiare il LED integrato e stampa sul monitor seriale |
+| `tools/flash.ps1` | Script: compila + carica + apre il monitor seriale (auto-rileva la porta) |
+| [`SETUP.md`](SETUP.md) | Guida completa: installazione, driver CP2102, problemi comuni e soluzioni |
+
+## Modificare il codice e ricaricarlo
+
+**Con Arduino IDE:** apri lo `.ino`, modifica, premi **Upload** (→). Ogni upload sovrascrive il
+programma precedente sulla scheda.
+
+**Con lo script (da PowerShell, nella cartella del repo):**
+```powershell
+.\tools\flash.ps1
+```
+Compila `blink_test`, lo carica sulla scheda e apre il monitor seriale. Opzioni:
+`-Sketch <nome>`, `-Port COM3`, `-NoMonitor`. CTRL+C chiude il monitor.
 
 ## Come testare la scheda (Windows + Arduino IDE)
 
