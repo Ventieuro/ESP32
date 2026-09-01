@@ -35,5 +35,3 @@ Se resta bloccato su `Connecting....____`, tieni premuto il pulsante **BOOT** fi
 ### 5. Verifica
 - Il LED blu sulla scheda lampeggia ogni 0,5 s.
 - *Strumenti → Monitor seriale* a **115200 baud**: scorre `LED ON` / `LED OFF`.
-
-cambio
