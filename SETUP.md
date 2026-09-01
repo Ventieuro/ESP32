@@ -101,7 +101,8 @@ Sketch: [`blink_test/blink_test.ino`](blink_test/blink_test.ino) — lampeggia i
 stampa `LED ON` / `LED OFF` sul seriale a 115200 baud.
 
 ### Da Arduino IDE
-1. **Strumenti → Scheda → ESP32 → "ESP32 Dev Module"** (o *DOIT ESP32 DEVKIT V1*)
+1. **Strumenti → Scheda → ESP32 → "ESP32 Dev Board"**
+   (pacchetto ESP32 3.x. Nelle guide più vecchie è chiamata *"ESP32 Dev Module"*: è la stessa scheda, FQBN `esp32:esp32:esp32`)
 2. **Strumenti → Porta → COM3** (quella del CP210x)
 3. Apri `blink_test/blink_test.ino` → pulsante **Upload** (→)
 4. Se resta bloccato su `Connecting....____`: tieni premuto **BOOT** sulla scheda finché parte la

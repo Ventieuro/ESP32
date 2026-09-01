@@ -39,7 +39,8 @@ Annota il numero di porta (es. `COM3`).
 2. *Strumenti → Scheda → Gestore schede* → cerca `esp32` → installa **esp32 by Espressif Systems**.
 
 ### 3. Selezione
-- *Strumenti → Scheda →* **ESP32 Dev Module** (o *DOIT ESP32 DEVKIT V1*)
+- *Strumenti → Scheda →* **ESP32 Dev Board**
+  (nel pacchetto ESP32 3.x si chiama così; nelle guide più vecchie è *"ESP32 Dev Module"* — è la stessa scheda)
 - *Strumenti → Porta →* la COM annotata sopra
 
 ### 4. Upload
