@@ -1,0 +1,18 @@
+# Arduino IDE build output
+build/
+*.hex
+*.bin
+*.elf
+*.map
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
+*.tmp
+Nuovo Documento di testo.txt
