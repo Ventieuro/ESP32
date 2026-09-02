@@ -158,20 +158,31 @@ LED OFF
 
 ---
 
-## 8. Prossimo passo: display OLED
+## 8. Display OLED SSD1306 128×64 (I²C)
 
-Collegamento I²C tipico ESP32 ↔ OLED:
+**Scollega l'USB mentre cabli.** L'ordine dei pin sul PCB del display varia — leggi le sigle.
+Su questo kit il display ha: `GND  VDD  SCK  SDA` (VDD = VCC, SCK = SCL).
 
-| OLED | ESP32 |
+| Pin display | Pin ESP32 |
 |---|---|
-| VCC | 3V3 |
 | GND | GND |
+| VDD | 3V3  (**non** 5V) |
+| SCK | GPIO 22 |
 | SDA | GPIO 21 |
-| SCL | GPIO 22 |
 
-Nel codice impostare la risoluzione **128×64** (non 128×32):
+### Librerie
+```
+arduino-cli lib install "Adafruit SSD1306"
+```
+(tira dentro anche *Adafruit GFX* e *Adafruit BusIO*). Da IDE: Gestore librerie → "Adafruit SSD1306".
+
+### Procedura
+1. Carica `i2c_scanner` → monitor seriale 115200 → deve stampare `dispositivo trovato a 0x3C`
+   (se non trova nulla: cablaggio o alimentazione; se trova `0x3D`: aggiorna `OLED_ADDR` in `oled_test`).
+2. Carica `oled_test` → sul display compare `ESP32 OK` + un contatore.
+
+Nel codice la risoluzione è **128×64** (non 128×32):
 ```cpp
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 ```
-Indirizzo I²C del display: di solito `0x3C`.

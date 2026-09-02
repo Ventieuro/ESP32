@@ -7,6 +7,8 @@ Progetto di test per scheda **ESP32 DevKit V1 (ESP32-WROOM-32)**.
 | Percorso | Descrizione |
 |---|---|
 | `blink_test/blink_test.ino` | Sketch di verifica: fa lampeggiare il LED integrato e stampa sul monitor seriale |
+| `i2c_scanner/i2c_scanner.ino` | Elenca i dispositivi I²C collegati (verifica cablaggio del display) |
+| `oled_test/oled_test.ino` | Test display OLED SSD1306 128×64: testo + contatore |
 | `tools/flash.ps1` | Script: compila + carica + apre il monitor seriale (auto-rileva la porta) |
 | [`SETUP.md`](SETUP.md) | Guida completa: installazione, driver CP2102, problemi comuni e soluzioni |
 
