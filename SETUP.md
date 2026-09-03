@@ -186,3 +186,32 @@ Nel codice la risoluzione è **128×64** (non 128×32):
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
 ```
+
+Il display è **monocromatico 1 bit**: pixel acceso (`SSD1306_WHITE`) o spento (`SSD1306_BLACK`),
+niente colori né grigi.
+
+---
+
+## 9. Immagini e animazioni sull'OLED
+
+L'OLED non riproduce GIF: gli si inviano **bitmap 1-bit già pronte**, un array per frame,
+fatte scorrere con un `delay`.
+
+### Disegnare
+- **Aseprite** (o qualsiasi editor): tela **128×64**, bianco/nero. Ogni frame timeline = un frame.
+- Esporta i frame come **PNG singoli** oppure un **GIF animato**.
+
+### Convertire — `tools/img2header.py` (richiede `pip install Pillow`)
+```
+python tools/img2header.py logo.png            -o oled_anim/anim.h -n anim
+python tools/img2header.py frames/             -o oled_anim/anim.h -n anim --dither
+python tools/img2header.py clip.gif            -o oled_anim/anim.h -n anim --threshold 110 --invert
+```
+Genera `anim.h` con: `anim_frameN[]`, l'array `anim_frames[]`, `ANIM_FRAME_COUNT`, `ANIM_WIDTH/HEIGHT`.
+Opzioni: `--threshold 0-255`, `--invert`, `--dither` (retino), `--fit contain|stretch`.
+
+> In alternativa, senza script: <https://javl.github.io/image2cpp/> (tool web).
+
+### Riprodurre
+Carica `oled_anim` (include già un `anim.h` di esempio: pallina che rimbalza).
+1 frame 128×64 = **1024 byte** di flash; sull'ESP32 ce ne stanno centinaia.

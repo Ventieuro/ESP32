@@ -9,7 +9,9 @@ Progetto di test per scheda **ESP32 DevKit V1 (ESP32-WROOM-32)**.
 | `blink_test/blink_test.ino` | Sketch di verifica: fa lampeggiare il LED integrato e stampa sul monitor seriale |
 | `i2c_scanner/i2c_scanner.ino` | Elenca i dispositivi I²C collegati (verifica cablaggio del display) |
 | `oled_test/oled_test.ino` | Test display OLED SSD1306 128×64: testo + contatore |
+| `oled_anim/oled_anim.ino` | Riproduce un'animazione a frame sull'OLED (frame in `oled_anim/anim.h`) |
 | `tools/flash.ps1` | Script: compila + carica + apre il monitor seriale (auto-rileva la porta) |
+| `tools/img2header.py` | Converte GIF / cartella di immagini in un header C di bitmap 1-bit |
 | [`SETUP.md`](SETUP.md) | Guida completa: installazione, driver CP2102, problemi comuni e soluzioni |
 
 ## Modificare il codice e ricaricarlo
