@@ -81,31 +81,27 @@ Annota il percorso, es. `/dev/cu.usbserial-0001`.
 
 ---
 
-## 5. Caricare lo sketch di test
+## 5. Caricare il progetto (tamagotchi)
 
-Sketch: [`blink_test/blink_test.ino`](blink_test/blink_test.ino).
-
-> Nota: questo sketch, oltre al LED, pilota anche il display OLED (richiede le librerie Adafruit
-> SSD1306/GFX e il display collegato — vedi § 8). Per un test minimo senza display, guarda solo la
-> parte `digitalWrite(LED_PIN, ...)`.
+Sketch: [`tamagotchi/tamagotchi.ino`](tamagotchi/tamagotchi.ino) — richiede l'OLED già collegato
+(vedi § 8) e le librerie Adafruit SSD1306/GFX installate, altrimenti resta bloccato in attesa.
 
 ### Da Arduino IDE
 1. **Strumenti → Scheda → ESP32 → "ESP32 Dev Board"** (FQBN `esp32:esp32:esp32`)
 2. **Strumenti → Porta →** la `/dev/cu.usbserial-XXXX` annotata sopra
-3. Apri `blink_test/blink_test.ino` → pulsante **Upload** (→)
+3. Apri `tamagotchi/tamagotchi.ino` → pulsante **Upload** (→)
 4. Se resta bloccato su `Connecting....____`: tieni premuto **BOOT** sulla scheda finché parte la
    scrittura, poi rilascia.
 
 ### Da riga di comando (arduino-cli)
 ```bash
-arduino-cli compile --fqbn esp32:esp32:esp32 blink_test
-arduino-cli upload -p /dev/cu.usbserial-0001 --fqbn esp32:esp32:esp32 blink_test
+arduino-cli compile --fqbn esp32:esp32:esp32 tamagotchi
+arduino-cli upload -p /dev/cu.usbserial-0001 --fqbn esp32:esp32:esp32 tamagotchi
 ```
 
 ### Con lo script `tools/flash.sh`
 ```bash
-./tools/flash.sh                              # sketch blink_test, porta auto
-./tools/flash.sh --sketch oled_test           # altro sketch
+./tools/flash.sh                              # sketch tamagotchi, porta auto
 ./tools/flash.sh --port /dev/cu.usbserial-0001
 ./tools/flash.sh --no-monitor                 # niente monitor seriale dopo l'upload
 ```
@@ -116,8 +112,9 @@ presente su macOS) per l'auto-rilevamento porta.
 
 ## 6. Verifica finale
 
-Vedi [SETUP.md § 6](SETUP.md#6-verifica-finale) — identico: LED che lampeggia, output seriale a
-115200 baud in Arduino IDE → **Strumenti → Monitor seriale**, oppure via `arduino-cli monitor`.
+Vedi [SETUP.md § 6](SETUP.md#6-verifica-finale) — identico: faccina + barre di stato sull'OLED,
+output seriale a 115200 baud in Arduino IDE → **Strumenti → Monitor seriale**, oppure via
+`arduino-cli monitor`.
 
 ---
 
@@ -138,8 +135,9 @@ Vedi [SETUP.md § 6](SETUP.md#6-verifica-finale) — identico: LED che lampeggia
 ## 8. Display OLED SSD1306 128×64 (I²C)
 
 Identico a [SETUP.md § 8](SETUP.md#8-display-oled-ssd1306-128×64-i²c): stesso cablaggio
-(GND/VDD→3V3/SCK→GPIO22/SDA→GPIO21), stessa libreria (`Adafruit SSD1306`), stessa procedura con
-`i2c_scanner` e `oled_test`.
+(GND/VDD→3V3/SCK→GPIO22/SDA→GPIO21), stessa libreria (`Adafruit SSD1306`). Verifica caricando
+`tamagotchi` (§ 5): se il display non risponde, il monitor seriale stampa un messaggio d'errore
+con indicazioni su cosa controllare.
 
 ```bash
 arduino-cli lib install "Adafruit SSD1306"
@@ -147,12 +145,7 @@ arduino-cli lib install "Adafruit SSD1306"
 
 ---
 
-## 9. Immagini e animazioni sull'OLED
+## 9. Bottoni del tamagotchi
 
-Identico a [SETUP.md § 9](SETUP.md#9-immagini-e-animazioni-sull-oled). `tools/img2header.py` è
-Python puro, gira identico su Mac:
-
-```bash
-pip3 install Pillow
-python3 tools/img2header.py logo.png -o oled_anim/anim.h -n anim
-```
+Vedi [SETUP.md § 9](SETUP.md#9-bottoni-del-tamagotchi) — identico: 3 bottoni su GPIO 4/16/17,
+ognuno con una gamba a GND (pull-up interno, nessuna resistenza esterna).

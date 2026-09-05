@@ -2,7 +2,7 @@
 # flash.sh - compila, carica e apre il monitor seriale per uno sketch ESP32 (macOS/Linux)
 #
 # Uso:
-#   ./tools/flash.sh                      # sketch "blink_test", porta auto
+#   ./tools/flash.sh                      # sketch "tamagotchi", porta auto
 #   ./tools/flash.sh --sketch oled_test   # sketch specifico
 #   ./tools/flash.sh --port /dev/cu.usbserial-0001   # porta specifica
 #   ./tools/flash.sh --no-monitor         # non aprire il monitor seriale dopo l'upload
@@ -11,7 +11,7 @@
 
 set -euo pipefail
 
-SKETCH="blink_test"
+SKETCH="tamagotchi"
 PORT=""
 FQBN="esp32:esp32:esp32"
 BAUD="115200"

@@ -1,20 +1,29 @@
-# ESP32
+# ESP32 Tamagotchi
 
-Progetto di test per scheda **ESP32 DevKit V1 (ESP32-WROOM-32)**.
+Un tamagotchi su scheda **ESP32 DevKit V1 (ESP32-WROOM-32)** + display OLED SSD1306 128×64 + 3
+bottoni. Nutrilo, giocaci, mettilo a dormire — lo stato sopravvive ai riavvii (salvato in flash).
 
 ## Contenuto
 
 | Percorso | Descrizione |
 |---|---|
-| `blink_test/blink_test.ino` | Sketch di verifica: fa lampeggiare il LED integrato e stampa sul monitor seriale |
-| `i2c_scanner/i2c_scanner.ino` | Elenca i dispositivi I²C collegati (verifica cablaggio del display) |
-| `oled_test/oled_test.ino` | Test display OLED SSD1306 128×64: testo + contatore |
-| `oled_anim/oled_anim.ino` | Riproduce un'animazione a frame sull'OLED (frame in `oled_anim/anim.h`) |
+| `tamagotchi/tamagotchi.ino` | Sketch principale: setup, lettura bottoni, ciclo di gioco |
+| `tamagotchi/pet.h` / `pet.cpp` | Stato del bug (fame/felicità/energia), logica, salvataggio persistente |
+| `tamagotchi/ui.h` / `ui.cpp` | Disegno faccia + barre di stato sull'OLED |
 | `tools/flash.ps1` | Script Windows/PowerShell: compila + carica + apre il monitor seriale (auto-rileva la porta) |
 | `tools/flash.sh` | Equivalente macOS/Linux di `flash.ps1` |
-| `tools/img2header.py` | Converte GIF / cartella di immagini in un header C di bitmap 1-bit |
 | [`SETUP.md`](SETUP.md) | Guida completa per **Windows**: installazione, driver CP2102, problemi comuni e soluzioni |
 | [`SETUP_MAC.md`](SETUP_MAC.md) | Guida completa per **macOS**: stessa procedura, driver e percorsi porta adattati |
+
+## Bottoni
+
+| Bottone | Pin ESP32 |
+|---|---|
+| Nutri | GPIO 4 |
+| Gioca | GPIO 16 |
+| Dormi/Sveglia | GPIO 17 |
+
+Ogni bottone: una gamba a **GND**, l'altra al GPIO (pull-up interno, nessuna resistenza necessaria).
 
 ## Modificare il codice e ricaricarlo
 
@@ -25,13 +34,13 @@ programma precedente sulla scheda.
 ```powershell
 .\tools\flash.ps1
 ```
-Opzioni: `-Sketch <nome>`, `-Port COM3`, `-NoMonitor`.
+Compila e carica `tamagotchi` di default. Opzioni: `-Sketch <nome>`, `-Port COM3`, `-NoMonitor`.
 
 **Con lo script (macOS/Linux, da terminale nella cartella del repo):**
 ```bash
 ./tools/flash.sh
 ```
-Opzioni: `--sketch <nome>`, `--port /dev/cu.xxx`, `--no-monitor`.
+Compila e carica `tamagotchi` di default. Opzioni: `--sketch <nome>`, `--port /dev/cu.xxx`, `--no-monitor`.
 
 Entrambi compilano lo sketch, lo caricano sulla scheda e aprono il monitor seriale (auto-rilevando
 la porta). CTRL+C chiude il monitor.
@@ -63,9 +72,10 @@ Annota il numero di porta (es. `COM3`).
 - *Strumenti → Porta →* la COM annotata sopra
 
 ### 4. Upload
-Apri `blink_test/blink_test.ino` e premi **Upload**.
+Collega prima l'OLED (vedi [SETUP.md § 8](SETUP.md#8-display-oled-ssd1306-128×64-i²c)), poi apri
+`tamagotchi/tamagotchi.ino` e premi **Upload**.
 Se resta bloccato su `Connecting....____`, tieni premuto il pulsante **BOOT** finché parte la scrittura.
 
 ### 5. Verifica
-- Il LED blu sulla scheda lampeggia ogni 0,5 s.
-- *Strumenti → Monitor seriale* a **115200 baud**: scorre `LED ON` / `LED OFF`.
+- Sul display compare una faccina + 3 barre di stato (fame/felicità/energia).
+- Premendo un bottone la barra corrispondente cambia subito.

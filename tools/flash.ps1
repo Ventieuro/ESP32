@@ -1,15 +1,15 @@
 # flash.ps1 - compila, carica e apre il monitor seriale per uno sketch ESP32
 #
 # Uso:
-#   .\tools\flash.ps1                      # sketch "blink_test", porta auto
-#   .\tools\flash.ps1 -Sketch blink_test   # sketch specifico
+#   .\tools\flash.ps1                      # sketch "tamagotchi", porta auto
+#   .\tools\flash.ps1 -Sketch tamagotchi   # sketch specifico
 #   .\tools\flash.ps1 -Port COM3           # porta specifica
 #   .\tools\flash.ps1 -NoMonitor           # non aprire il monitor seriale dopo l'upload
 #
 # Premi CTRL+C per chiudere il monitor seriale.
 
 param(
-    [string]$Sketch = "blink_test",
+    [string]$Sketch = "tamagotchi",
     [string]$Port = "",
     [string]$Fqbn = "esp32:esp32:esp32",
     [int]$Baud = 115200,

@@ -13,7 +13,8 @@ Scritta durante il primo avvio reale del kit: include anche i problemi incontrat
 | **Breadboard** (nell'inserzione tradotta male "lavagna per riunioni") | Prototipazione senza saldare |
 | Display **OLED 0,96" 128×64 I²C** (driver SSD1306, pin VCC/GND/SCL/SDA) | Piccolo schermo per testo/grafica |
 | Cavo **micro USB** | Alimentazione + dati + programmazione |
-| Cavi **jumper** 10x maschio-femmina, 20 cm | Collegamenti scheda ↔ display ↔ sensori |
+| Cavi **jumper** 10x maschio-femmina, 20 cm | Collegamenti scheda ↔ display ↔ bottoni |
+| **3 bottoni** (tattili o interruttori) | Input del tamagotchi: nutri / gioca / dormi |
 
 Scheda: tipo **ESP32 DevKit V1 / DOIT (ESP32-WROOM-32)**. LED rosso = alimentazione, LED blu = GPIO 2.
 
@@ -95,50 +96,35 @@ Annota il numero, es. **COM3**.
 
 ---
 
-## 5. Caricare lo sketch di test
+## 5. Caricare il progetto (tamagotchi)
 
-Sketch: [`blink_test/blink_test.ino`](blink_test/blink_test.ino) — lampeggia il LED blu (GPIO 2) e
-stampa `LED ON` / `LED OFF` sul seriale a 115200 baud.
+Sketch: [`tamagotchi/tamagotchi.ino`](tamagotchi/tamagotchi.ino) — richiede l'OLED già collegato
+(vedi **sezione 8**) perché il codice resta bloccato in attesa se non lo trova.
 
 ### Da Arduino IDE
 1. **Strumenti → Scheda → ESP32 → "ESP32 Dev Board"**
    (pacchetto ESP32 3.x. Nelle guide più vecchie è chiamata *"ESP32 Dev Module"*: è la stessa scheda, FQBN `esp32:esp32:esp32`)
 2. **Strumenti → Porta → COM3** (quella del CP210x)
-3. Apri `blink_test/blink_test.ino` → pulsante **Upload** (→)
+3. Apri `tamagotchi/tamagotchi.ino` → pulsante **Upload** (→)
 4. Se resta bloccato su `Connecting....____`: tieni premuto **BOOT** sulla scheda finché parte la
    scrittura, poi rilascia. (Su questa scheda il download automatico ha funzionato senza premere nulla.)
 
 ### Da riga di comando (arduino-cli)
 ```
-arduino-cli compile --fqbn esp32:esp32:esp32 blink_test
-arduino-cli upload -p COM3 --fqbn esp32:esp32:esp32 blink_test
+arduino-cli compile --fqbn esp32:esp32:esp32 tamagotchi
+arduino-cli upload -p COM3 --fqbn esp32:esp32:esp32 tamagotchi
 ```
 
 ---
 
 ## 6. Verifica finale
 
-- **LED:** il LED blu sulla scheda lampeggia ~1 volta al secondo.
-- **Seriale:** Arduino IDE → **Strumenti → Monitor seriale**, baud **115200**. Deve scorrere:
-  ```
-  ESP32 avviato - test blink
-  LED ON
-  LED OFF
-  LED ON
-  ...
-  ```
+Sul display OLED compare una faccina (occhi + bocca) con 3 barre di stato in basso: **F**
+(fame/sazietà), **H** (felicità), **E** (energia). Premendo uno dei 3 bottoni (vedi **sezione 9**)
+la barra corrispondente cambia subito e la faccina può cambiare espressione.
 
-Output reale ottenuto su questo kit (upload OK, `Hash of data verified`, `Hard resetting via RTS pin`):
-```
-rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
-...
-entry 0x400805b4
-ESP32 avviato - test blink
-LED ON
-LED OFF
-LED ON
-LED OFF
-```
+Il monitor seriale (**115200 baud**) stampa `Tamagotchi avviato` e poi un messaggio ad ogni
+pressione bottone (`Nutrito`, `Giocato`, `Va a dormire`/`Si sveglia`).
 
 ✅ **Scheda funzionante.**
 
@@ -176,10 +162,11 @@ arduino-cli lib install "Adafruit SSD1306"
 ```
 (tira dentro anche *Adafruit GFX* e *Adafruit BusIO*). Da IDE: Gestore librerie → "Adafruit SSD1306".
 
-### Procedura
-1. Carica `i2c_scanner` → monitor seriale 115200 → deve stampare `dispositivo trovato a 0x3C`
-   (se non trova nulla: cablaggio o alimentazione; se trova `0x3D`: aggiorna `OLED_ADDR` in `oled_test`).
-2. Carica `oled_test` → sul display compare `ESP32 OK` + un contatore.
+### Verifica
+Carica `tamagotchi` (sezione 5): se il display non risponde, il monitor seriale (115200 baud)
+stampa `Display non trovato: controlla cablaggio e indirizzo I2C` — ricontrolla i collegamenti.
+Se il tuo modulo usa l'indirizzo `0x3D` invece di `0x3C`, aggiorna `OLED_ADDR` in
+[`tamagotchi/tamagotchi.ino`](tamagotchi/tamagotchi.ino).
 
 Nel codice la risoluzione è **128×64** (non 128×32):
 ```cpp
@@ -192,26 +179,17 @@ niente colori né grigi.
 
 ---
 
-## 9. Immagini e animazioni sull'OLED
+## 9. Bottoni del tamagotchi
 
-L'OLED non riproduce GIF: gli si inviano **bitmap 1-bit già pronte**, un array per frame,
-fatte scorrere con un `delay`.
+| Bottone | Pin ESP32 |
+|---|---|
+| Nutri | GPIO 4 |
+| Gioca | GPIO 16 |
+| Dormi/Sveglia | GPIO 17 |
 
-### Disegnare
-- **Aseprite** (o qualsiasi editor): tela **128×64**, bianco/nero. Ogni frame timeline = un frame.
-- Esporta i frame come **PNG singoli** oppure un **GIF animato**.
+Ogni bottone: una gamba a **GND**, l'altra al GPIO indicato. Si usa il **pull-up interno**
+(`INPUT_PULLUP` nel codice), quindi non serve nessuna resistenza esterna.
 
-### Convertire — `tools/img2header.py` (richiede `pip install Pillow`)
-```
-python tools/img2header.py logo.png            -o oled_anim/anim.h -n anim
-python tools/img2header.py frames/             -o oled_anim/anim.h -n anim --dither
-python tools/img2header.py clip.gif            -o oled_anim/anim.h -n anim --threshold 110 --invert
-```
-Genera `anim.h` con: `anim_frameN[]`, l'array `anim_frames[]`, `ANIM_FRAME_COUNT`, `ANIM_WIDTH/HEIGHT`.
-Opzioni: `--threshold 0-255`, `--invert`, `--dither` (retino), `--fit contain|stretch`.
-
-> In alternativa, senza script: <https://javl.github.io/image2cpp/> (tool web).
-
-### Riprodurre
-Carica `oled_anim` (include già un `anim.h` di esempio: pallina che rimbalza).
-1 frame 128×64 = **1024 byte** di flash; sull'ESP32 ce ne stanno centinaia.
+Se il tuo cablaggio non ha una fila GND condivisa (es. schede a morsetti a vite con un solo
+terminale GND per lato), puoi tranquillamente stringere **più fili insieme sotto lo stesso
+morsetto** — a queste tensioni (3.3V, correnti minime) è prassi normale, nessun rischio.
