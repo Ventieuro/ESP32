@@ -30,18 +30,20 @@ void setup() {
   display.setTextSize(2);
   display.setCursor(0, 0);
   display.setTextSize(1);
-  display.println("Hello World!!");
-  display.display();  
+  display.println("ESP32 pronto");
+  display.display();
 }
 
 void loop() {
   digitalWrite(LED_PIN, HIGH);
-  display.println("Ciao Gaia!");
+  Serial.println("LED ON");
+  display.println("LED ON");
   display.display();
-  delay(1000);
+  delay(500);
 
   digitalWrite(LED_PIN, LOW);
-  display.println("Ciao Gian!");
+  Serial.println("LED OFF");
+  display.println("LED OFF");
   display.display();
-  delay(1000);
+  delay(500);
 }

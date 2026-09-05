@@ -10,23 +10,38 @@ Progetto di test per scheda **ESP32 DevKit V1 (ESP32-WROOM-32)**.
 | `i2c_scanner/i2c_scanner.ino` | Elenca i dispositivi I²C collegati (verifica cablaggio del display) |
 | `oled_test/oled_test.ino` | Test display OLED SSD1306 128×64: testo + contatore |
 | `oled_anim/oled_anim.ino` | Riproduce un'animazione a frame sull'OLED (frame in `oled_anim/anim.h`) |
-| `tools/flash.ps1` | Script: compila + carica + apre il monitor seriale (auto-rileva la porta) |
+| `tools/flash.ps1` | Script Windows/PowerShell: compila + carica + apre il monitor seriale (auto-rileva la porta) |
+| `tools/flash.sh` | Equivalente macOS/Linux di `flash.ps1` |
 | `tools/img2header.py` | Converte GIF / cartella di immagini in un header C di bitmap 1-bit |
-| [`SETUP.md`](SETUP.md) | Guida completa: installazione, driver CP2102, problemi comuni e soluzioni |
+| [`SETUP.md`](SETUP.md) | Guida completa per **Windows**: installazione, driver CP2102, problemi comuni e soluzioni |
+| [`SETUP_MAC.md`](SETUP_MAC.md) | Guida completa per **macOS**: stessa procedura, driver e percorsi porta adattati |
 
 ## Modificare il codice e ricaricarlo
 
 **Con Arduino IDE:** apri lo `.ino`, modifica, premi **Upload** (→). Ogni upload sovrascrive il
 programma precedente sulla scheda.
 
-**Con lo script (da PowerShell, nella cartella del repo):**
+**Con lo script (Windows, da PowerShell nella cartella del repo):**
 ```powershell
 .\tools\flash.ps1
 ```
-Compila `blink_test`, lo carica sulla scheda e apre il monitor seriale. Opzioni:
-`-Sketch <nome>`, `-Port COM3`, `-NoMonitor`. CTRL+C chiude il monitor.
+Opzioni: `-Sketch <nome>`, `-Port COM3`, `-NoMonitor`.
 
-## Come testare la scheda (Windows + Arduino IDE)
+**Con lo script (macOS/Linux, da terminale nella cartella del repo):**
+```bash
+./tools/flash.sh
+```
+Opzioni: `--sketch <nome>`, `--port /dev/cu.xxx`, `--no-monitor`.
+
+Entrambi compilano lo sketch, lo caricano sulla scheda e aprono il monitor seriale (auto-rilevando
+la porta). CTRL+C chiude il monitor.
+
+## Come testare la scheda
+
+- **Windows:** vedi [SETUP.md](SETUP.md)
+- **macOS:** vedi [SETUP_MAC.md](SETUP_MAC.md)
+
+Riepilogo rapido (Windows + Arduino IDE):
 
 ### 1. Driver USB-seriale
 Collega l'ESP32 con un cavo USB **dati**. In *Gestione dispositivi → Porte (COM e LPT)* deve comparire:
